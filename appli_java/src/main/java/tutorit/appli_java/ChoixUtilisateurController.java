@@ -7,7 +7,7 @@ import totorit.bdd.TableViewConnecteur;
 
 import java.sql.SQLException;
 
-public class HelloController {
+public class ChoixUtilisateurController {
     @FXML
     private TableView tableauUtilisateurs;
     @FXML
