@@ -14,10 +14,7 @@ CREATE TABLE Lieu(
 DROP TABLE IF EXISTS LieuPrivé CASCADE;
 CREATE TABLE LieuPrivé(
                           idLieu SMALLINT,
-                          idPersonne SMALLINT,
-
-                          CONSTRAINT PK_LieuPrivé PRIMARY KEY (idLieu),
-                          CONSTRAINT UC_LieuPrivé_idPersonne UNIQUE (idPersonne)
+                          CONSTRAINT PK_LieuPrivé PRIMARY KEY (idLieu)
 );
 
 DROP TABLE IF EXISTS LieuPublic CASCADE;
@@ -29,7 +26,7 @@ CREATE TABLE LieuPublic(
 
 DROP TABLE IF EXISTS Localité CASCADE;
 CREATE TABLE Localité(
-                         codePostal SMALLINT,
+                         codePostal SMALLSERIAL,
                          nom VARCHAR(50) NOT NULL,
                          CONSTRAINT PK_Localité PRIMARY KEY (codePostal),
 
@@ -56,8 +53,10 @@ CREATE TABLE Personne(
                          sexe SMALLINT NOT NULL,
                          numTéléphone VARCHAR(20),
                          adresseMail VARCHAR(50) NOT NULL,
+                         idLieuPrivé SMALLINT NOT NULL,
 
 
+                         CONSTRAINT UC_Personne_idLieuPrivé UNIQUE (idLieuPrivé),
                          CONSTRAINT PK_Personne PRIMARY KEY (id),
                          CONSTRAINT CK_Personne_dateNaissance CHECK (dateNaissance < CURRENT_DATE),
     -- voir ici https://en.wikipedia.org/wiki/ISO/IEC_5218
@@ -269,12 +268,6 @@ ALTER TABLE LieuPrivé
             REFERENCES Lieu(id)
             ON UPDATE CASCADE
             ON DELETE CASCADE;
-ALTER TABLE LieuPrivé
-    ADD CONSTRAINT FK_LieuPrivé_idPersonne
-        FOREIGN KEY (idPersonne)
-            REFERENCES Personne(id)
-            ON UPDATE CASCADE
-            ON DELETE CASCADE;
 
 ALTER TABLE Localité_Personne
     ADD CONSTRAINT FK_Localité_Personne_codePostalLocalité
@@ -292,6 +285,12 @@ ALTER TABLE Localité_Personne
 
 
 -- ================ Personne / Élève / Tuteur ============================
+
+ALTER TABLE Personne
+    ADD CONSTRAINT FK_Personne_idLieuPrivé
+        FOREIGN KEY (idLieuPrivé)
+            REFERENCES LieuPrivé(idLieu)
+            ON UPDATE CASCADE;
 
 ALTER TABLE Personne_Langue
     ADD CONSTRAINT FK_Personne_Langue_idPersonne
@@ -409,13 +408,15 @@ ALTER TABLE NiveauRequis
     ADD CONSTRAINT FK_NiveauRequis_idPrestation
         FOREIGN KEY (idPrestation)
             REFERENCES Prestation(id)
-            ON UPDATE CASCADE;
+            ON UPDATE CASCADE
+            ON DELETE CASCADE;
 
 ALTER TABLE NiveauPossible
     ADD CONSTRAINT FK_NiveauPossible_nomDomaineCompétence
         FOREIGN KEY (nomDomaineCompétence)
             REFERENCES DomaineCompétence(nom)
-            ON UPDATE CASCADE;
+            ON UPDATE CASCADE
+            ON DELETE CASCADE;
 
 ALTER TABLE DomaineCompétence_Élève
     ADD CONSTRAINT FK_DomaineCompétence_Élève_nomDomaineCompétence
@@ -442,7 +443,3 @@ ALTER TABLE DomaineCompétence_Tuteur
             REFERENCES Tuteur(idPersonne)
             ON UPDATE CASCADE
             ON DELETE CASCADE;
-
-
-
-
