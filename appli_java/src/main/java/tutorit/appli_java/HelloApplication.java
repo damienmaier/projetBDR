@@ -15,8 +15,7 @@ import java.sql.SQLException;
 public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("choixUtilisateur.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+        Scene scene = Controlleurs.CHOIX_UTILISATEUR.scene();
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();
@@ -24,9 +23,5 @@ public class HelloApplication extends Application {
 
     public static void main(String[] args) throws SQLException {
         launch();
-        String url = "jdbc:postgresql://localhost:4242/postgres?user=postgres";
-        Connection connection = DriverManager.getConnection(url);
-        ResultSet resultSet = connection.createStatement().executeQuery("SELECT * FROM tuteur");
-        System.out.println("aa");
     }
 }

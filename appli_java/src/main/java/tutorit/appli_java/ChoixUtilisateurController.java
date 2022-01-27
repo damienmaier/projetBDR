@@ -3,8 +3,10 @@ package tutorit.appli_java;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
-import totorit.bdd.TableViewConnecteur;
+import javafx.stage.Stage;
+import tutorit.bdd.TableViewConnecteur;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 public class ChoixUtilisateurController {
@@ -16,7 +18,7 @@ public class ChoixUtilisateurController {
 
     @FXML
     public void initialize() throws SQLException {
-        tableViewConnecteur = new TableViewConnecteur(tableauUtilisateurs, "personne", false);
+        tableViewConnecteur = new TableViewConnecteur(tableauUtilisateurs, "SELECT * FROM Personne", false);
 
         boutonConnexion.disableProperty().bind(
                 tableauUtilisateurs.getSelectionModel().selectedItemProperty().isNull()
@@ -24,9 +26,10 @@ public class ChoixUtilisateurController {
     }
 
     @FXML
-    public void connexion() throws SQLException {
+    public void connexion() throws SQLException, IOException {
         Utilisateur.definirId(tableViewConnecteur.idLigneSelectionnee());
         System.out.println(Utilisateur.actuel());
+        ((Stage) boutonConnexion.getScene().getWindow()).setScene(Controlleurs.PAGE_PRINCIPALE.scene());
     }
 
 }

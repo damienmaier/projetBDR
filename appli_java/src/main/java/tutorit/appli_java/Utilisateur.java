@@ -1,6 +1,6 @@
 package tutorit.appli_java;
 
-import totorit.bdd.BaseDeDonnees;
+import tutorit.bdd.BaseDeDonnees;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,26 +16,47 @@ public class Utilisateur {
         return actuel;
     }
 
-    private final String prenom;
-    private final String nom;
-    private final boolean estEleve;
-    private final boolean estTuteur;
+    private final int id;
 
-    Utilisateur(int id) throws SQLException {
+    private Utilisateur(int id) throws SQLException {
+        this.id = id;
+    }
+
+    public String prenom() throws SQLException {
         ResultSet rs = BaseDeDonnees.connection().createStatement().executeQuery(
-                "SELECT prénom, nom from personne WHERE id = " + id);
+                "SELECT prénom from personne WHERE id = " + id);
         rs.next();
-        prenom = rs.getString(1);
-        nom = rs.getString(2);
+        return rs.getString(1);
+    }
 
-        estEleve = BaseDeDonnees.connection().createStatement().executeQuery(
+    public String nom() throws SQLException {
+        ResultSet rs = BaseDeDonnees.connection().createStatement().executeQuery(
+                "SELECT nom from personne WHERE id = " + id);
+        rs.next();
+        return rs.getString(1);
+    }
+
+    public boolean estEleve() throws SQLException {
+        return BaseDeDonnees.connection().createStatement().executeQuery(
                 "SELECT * from Élève WHERE idPersonne = " + id).next();
-        estTuteur = BaseDeDonnees.connection().createStatement().executeQuery(
+    }
+
+    public boolean estTuteur() throws SQLException {
+        return BaseDeDonnees.connection().createStatement().executeQuery(
                 "SELECT * from Tuteur WHERE idPersonne = " + id).next();
     }
 
     @Override
     public String toString() {
-        return prenom + " " + nom + (estEleve ? " élève" : "") + (estTuteur ? " tuteur" : "");
+        try {
+            return prenom() + " " + nom() + (estEleve() ? " élève" : "") + (estTuteur() ? " tuteur" : "");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public int id() {
+        return id;
     }
 }

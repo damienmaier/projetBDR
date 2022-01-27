@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tutorit.appli_java.RechercheTuteurController">
+   <children>
+      <TableView fx:id="tableauPrestations" layoutX="14.0" layoutY="14.0" prefHeight="300.0" prefWidth="1000.0" />
+      <Button fx:id="boutonPlanifier" layoutX="368.0" layoutY="334.0" mnemonicParsing="false" onAction="#planifierSession" text="Planifier une session de soutien scolaire..." />
+   </children>
+</AnchorPane>

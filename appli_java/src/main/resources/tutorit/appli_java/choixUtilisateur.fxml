@@ -8,6 +8,6 @@
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
-   <TableView fx:id="tableauUtilisateurs" prefHeight="200.0" prefWidth="200.0" />
+   <TableView fx:id="tableauUtilisateurs" prefHeight="500.0" prefWidth="1000.0" />
    <Button fx:id="boutonConnexion" mnemonicParsing="false" onAction="#connexion" text="Connexion" />
 </VBox>

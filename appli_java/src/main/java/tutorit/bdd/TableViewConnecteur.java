@@ -1,4 +1,4 @@
-package totorit.bdd;
+package tutorit.bdd;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -13,13 +13,13 @@ import java.sql.SQLException;
 
 public class TableViewConnecteur {
     private final TableView tableView;
-    private final String nomTable;
+    private final String requete;
     private final boolean afficherPremiereColonne;
 
-    public TableViewConnecteur(TableView tableView, String nomTable, boolean afficherPremiereColonne) throws SQLException {
+    public TableViewConnecteur(TableView tableView, String requete, boolean afficherPremiereColonne) throws SQLException {
         this.afficherPremiereColonne = afficherPremiereColonne;
         this.tableView = tableView;
-        this.nomTable = nomTable;
+        this.requete = requete;
         mettreAJour();
     }
 
@@ -28,7 +28,7 @@ public class TableViewConnecteur {
     }
 
     public void mettreAJour() throws SQLException {
-        ResultSet rs = BaseDeDonnees.connection().createStatement().executeQuery("SELECT * from " + nomTable);
+        ResultSet rs = BaseDeDonnees.connection().createStatement().executeQuery(requete);
         for (int i = afficherPremiereColonne ? 0 : 1; i < rs.getMetaData().getColumnCount(); i++) {
             final int j = i;
             TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i + 1));

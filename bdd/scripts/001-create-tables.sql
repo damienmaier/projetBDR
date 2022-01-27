@@ -162,7 +162,13 @@ CREATE TYPE niveau AS ENUM (
     'maturité',
     'bachelor',
     'master',
-    'doctorat'
+    'doctorat',
+    'A1',
+    'A2',
+    'B1',
+    'B2',
+    'C1',
+    'C2'
     );
 
 DROP TABLE IF EXISTS Session CASCADE;
