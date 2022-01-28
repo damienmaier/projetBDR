@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tutorit.appli_java.PrestationsController">
+   <children>
+      <TableView fx:id="tableauPrestations" layoutX="10.0" layoutY="5.0" prefHeight="345.0" prefWidth="585.0">
+      </TableView>
+      <Button fx:id="boutonAjouter" layoutX="81.0" layoutY="362.0" mnemonicParsing="false" onAction="#ajouter" text="Ajouter" />
+      <Button fx:id="boutonSupprimer" layoutX="283.0" layoutY="362.0" mnemonicParsing="false" onAction="#supprimer" text="Supprimer" />
+   </children>
+</AnchorPane>

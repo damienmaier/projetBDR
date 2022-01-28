@@ -7,10 +7,11 @@ import tutorit.bdd.BaseDeDonnees;
 import tutorit.bdd.TableViewConnecteur;
 
 import java.sql.Date;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class EditerSessionController {
+    public TableView tableauDispo;
+    public TableView tableauSessions;
     @FXML
     DatePicker champDate;
     @FXML
@@ -27,18 +28,82 @@ public class EditerSessionController {
     Label texteErreur;
 
     TableViewConnecteur tableViewConnecteur;
+    TableViewConnecteur tableViewConnecteurDispo;
+    TableViewConnecteur tableViewConnecteurSessions;
 
     public void initialize() throws SQLException {
         texteErreur.setVisible(false);
+        tableauDispo.setSelectionModel(null);
+        tableauSessions.setSelectionModel(null);
+
+        String requeteDispo = """
+                SELECT dateetheuredebut AS début, durée
+                FROM plagededisponibilité
+                WHERE idtuteur=(""" + requeteIdTuteur() + ")";
+
+        //language=PostgreSQL
+        String requeteSession = """
+                SELECT dateetheuredébut AS début, durée
+                FROM session
+                    INNER JOIN prestation
+                        ON session.idprestation = prestation.id
+                WHERE prestation.idTuteur = (""" + requeteIdTuteur() + ")";
+
+        // si on est en train de modifier une session, on ne veut pas qu'elle apparaisse dans la liste
+        if (!Etat.creerSession) {
+            requeteSession += """
+
+            AND session.id <>""" + Etat.idSession;
+        }
+
+
+        tableViewConnecteurDispo = new TableViewConnecteur(tableauDispo, requeteDispo, true, false);
+        tableViewConnecteurSessions = new TableViewConnecteur(tableauSessions, requeteSession, true, false);
         tableViewConnecteur = new TableViewConnecteur(tableLieu,
-                BaseDeDonnees.requeteLieuxCommuns(
-                        "SELECT idTuteur FROM Prestation WHERE id=" + SessionActuelle.idPrestation +
-                                " UNION SELECT " + Utilisateur.actuel().id()),
-                false);
+                BaseDeDonnees.requeteLieuxCommuns(requeteIdParticipants()), false);
 
         boutonEnregistrer.disableProperty().bind(
                 tableLieu.getSelectionModel().selectedItemProperty().isNull()
         );
+    }
+
+    private String requeteIdParticipants() {
+        if (Etat.creerSession) {
+            //language=PostgreSQL
+            return """
+                    SELECT idTuteur 
+                    FROM Prestation
+                    WHERE id=""" + Etat.idPrestation + """
+                                        
+                    UNION 
+                    SELECT
+                    """ + Etat.idUtilisateur;
+        } else {
+            //language=PostgreSQL
+            return """
+                    SELECT "idÉlève"
+                    FROM "session_Élève"
+                    WHERE idsession = """ + Etat.idSession + """
+                                        
+                    UNION
+                    SELECT prestation.idtuteur
+                    FROM session
+                        INNER JOIN prestation
+                            ON session.idprestation = prestation.id
+                    WHERE session.id =""" + Etat.idSession
+                    ;
+        }
+    }
+
+    private String requeteIdTuteur() {
+        if (Etat.creerSession)
+            //language=PostgreSQL
+            return """
+                    SELECT idTuteur
+                    FROM Prestation
+                    WHERE id=""" + Etat.idPrestation;
+        else
+            return Etat.idUtilisateur;
     }
 
     @FXML
@@ -47,18 +112,56 @@ public class EditerSessionController {
             String debut =
                     "'" + Date.valueOf(champDate.getValue()) + " " + champHeure.getText() + ":" + champMinute.getText() + "'";
             String duree = "'" + champDuree.getText() + " minute'";
-            ResultSet rs = BaseDeDonnees.connection().createStatement().executeQuery(
-                    "INSERT INTO Session(dateetheuredébut, durée, idprestation, idlieu) VALUES" +
-                            "(" + debut + "," + duree + "," + SessionActuelle.idPrestation +
-                            "," + tableViewConnecteur.idLigneSelectionnee() + ") RETURNING id");
-            rs.next();
-            int idSession = rs.getInt(1);
-            BaseDeDonnees.connection().createStatement().executeUpdate(
-                    "INSERT INTO session_Élève VALUES (" + idSession + ", " + Utilisateur.actuel().id() + ")"
-            );
+            String idLieu = tableViewConnecteur.premiereCelluleLigneSelectionnee();
+
+            //language=PostgreSQL
+            String sql;
+
+            if (Etat.creerSession) {
+                sql = """
+                        BEGIN;
+
+                        INSERT INTO Session(dateetheuredébut, durée, idprestation, idlieu)
+                        VALUES(
+                                """ + debut + """
+                        , """ + duree + """
+                        , """ + Etat.idPrestation + """
+                        , """ + idLieu + """
+                        );
+
+                        INSERT INTO "session_Élève"
+                        VALUES(
+                                (SELECT currval(pg_get_serial_sequence('session', 'id'))),
+                                """ + Etat.idUtilisateur + """
+                                        );
+
+                        COMMIT;
+                        """;
+            } else {
+                sql = """
+                        UPDATE session
+                        SET
+                        dateetheuredébut = """ + debut + """
+                        , durée = """ + duree + """
+                        , idLieu = """ + idLieu + """
+
+                        WHERE id = """ + Etat.idSession;
+            }
+
+            BaseDeDonnees.requeteSansResultat(sql);
+
+            if (!Etat.creerSession) {
+                Etat.observateur.notifier();
+            }
+
             ((Stage) boutonEnregistrer.getScene().getWindow()).close();
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                BaseDeDonnees.requeteSansResultat("ROLLBACK;");
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
             texteErreur.setVisible(true);
         }
     }

@@ -5,7 +5,9 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tutorit.appli_java.SessionsController">
    <children>
-      <TableView fx:id="tableauSessions" layoutX="14.0" layoutY="14.0" prefHeight="327.0" prefWidth="581.0" />
-      <Button fx:id="boutonAnnuler" layoutX="232.0" layoutY="352.0" mnemonicParsing="false" onAction="#annulerSession" text="Annuler la session" />
+      <TableView fx:id="tableauSessions" layoutX="14.0" layoutY="14.0" prefHeight="327.0" prefWidth="862.0" />
+      <Button fx:id="boutonAnnuler" layoutX="244.0" layoutY="352.0" mnemonicParsing="false" onAction="#annulerSession" text="Annuler la session" />
+      <Button fx:id="boutonModifier" layoutX="406.0" layoutY="352.0" mnemonicParsing="false" onAction="#modifierSession" text="Modifier la session" />
+      <Button fx:id="boutonInfos" layoutX="37.0" layoutY="352.0" mnemonicParsing="false" onAction="#infos" text="Voir infos participants" />
    </children>
 </AnchorPane>

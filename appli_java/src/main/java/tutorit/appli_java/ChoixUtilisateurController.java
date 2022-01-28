@@ -1,5 +1,6 @@
 package tutorit.appli_java;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class ChoixUtilisateurController {
+    public Button boutonNouveau;
     @FXML
     private TableView tableauUtilisateurs;
     @FXML
@@ -18,7 +20,7 @@ public class ChoixUtilisateurController {
 
     @FXML
     public void initialize() throws SQLException {
-        tableViewConnecteur = new TableViewConnecteur(tableauUtilisateurs, "SELECT * FROM Personne", false);
+        tableViewConnecteur = new TableViewConnecteur(tableauUtilisateurs, "SELECT * FROM vUtilisateurs", false);
 
         boutonConnexion.disableProperty().bind(
                 tableauUtilisateurs.getSelectionModel().selectedItemProperty().isNull()
@@ -27,9 +29,21 @@ public class ChoixUtilisateurController {
 
     @FXML
     public void connexion() throws SQLException, IOException {
-        Utilisateur.definirId(tableViewConnecteur.idLigneSelectionnee());
-        System.out.println(Utilisateur.actuel());
-        ((Stage) boutonConnexion.getScene().getWindow()).setScene(Controlleurs.PAGE_PRINCIPALE.scene());
+        Etat.idUtilisateur = tableViewConnecteur.premiereCelluleLigneSelectionnee();
+        ((Stage) boutonConnexion.getScene().getWindow()).setScene(Contenu.PAGE_PRINCIPALE.scene());
     }
 
+    public void nouveau(ActionEvent actionEvent) throws IOException {
+        Etat.observateur = new Observateur() {
+            @Override
+            public void notifier() {
+                try {
+                    tableViewConnecteur.mettreAJour();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        Contenu.EDITER_UTILISATEUR.ouvrirDansNouvelleFenetre();
+    }
 }

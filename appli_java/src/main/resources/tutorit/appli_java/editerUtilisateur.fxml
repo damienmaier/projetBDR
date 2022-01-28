@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="785.0" prefWidth="685.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tutorit.appli_java.EditerUtilisateurController">
+   <children>
+      <TextField fx:id="champNom" layoutX="42.0" layoutY="47.0" />
+      <TextField fx:id="champPrenom" layoutX="42.0" layoutY="102.0" />
+      <DatePicker fx:id="champDateNaissance" layoutX="29.0" layoutY="158.0" />
+      <RadioButton fx:id="radioHomme" layoutX="25.0" layoutY="193.0" mnemonicParsing="false" text="Homme" />
+      <RadioButton fx:id="radioFemme" layoutX="128.0" layoutY="193.0" mnemonicParsing="false" text="Femme" />
+      <TextField fx:id="champTelephone" layoutX="28.0" layoutY="235.0" />
+      <TextField fx:id="champMail" layoutX="36.0" layoutY="297.0" />
+      <TextField fx:id="champCapacite" layoutX="413.0" layoutY="123.0" prefHeight="24.0" prefWidth="66.0" />
+      <TextField fx:id="champAdresse" layoutX="360.0" layoutY="170.0" />
+      <TableView fx:id="tableauLocaliteDomicile" layoutX="346.0" layoutY="229.0" prefHeight="200.0" prefWidth="200.0" />
+      <Label layoutX="113.0" layoutY="20.0" text="nom" />
+      <Label layoutX="97.0" layoutY="79.0" text="prénom" />
+      <Label layoutX="63.0" layoutY="135.0" text="date de naissance" />
+      <Label layoutX="80.0" layoutY="219.0" text="téléphone" />
+      <Label layoutX="72.0" layoutY="271.0" text="adresse mail" />
+      <Label layoutX="387.0" layoutY="28.0" text="capacité d'accueil" />
+      <Label layoutX="342.0" layoutY="53.0" text="(nombre de personnes pouvant" />
+      <Label layoutX="349.0" layoutY="75.0" text="faire une session de cours d'appui" />
+      <Label layoutX="419.0" layoutY="99.0" text="chez vous)" />
+      <Label layoutX="399.0" layoutY="150.0" text="rue et numéro" />
+      <Label layoutX="369.0" layoutY="203.0" text="localité où vous habitez" />
+      <Label layoutX="38.0" layoutY="421.0" text="Langues parlées" />
+      <TableView fx:id="tableauLangues" layoutX="28.0" layoutY="470.0" prefHeight="200.0" prefWidth="200.0" />
+      <Label layoutX="35.0" layoutY="442.0" text="(sélectionnuer plusieurs avec CTRL)" />
+      <Button fx:id="boutonEnregistrer" layoutX="224.0" layoutY="727.0" mnemonicParsing="false" onAction="#enregistrer" text="Enregistrer" />
+      <Label fx:id="texteErreur" layoutX="396.0" layoutY="731.0" text="Entrée erronée" textFill="#f80000" />
+      <CheckBox fx:id="checkTuteur" layoutX="36.0" layoutY="337.0" mnemonicParsing="false" text="tuteur" />
+      <CheckBox fx:id="checkEleve" layoutX="36.0" layoutY="366.0" mnemonicParsing="false" text="élève" />
+      <Label layoutX="353.0" layoutY="440.0" text="localités où vous pouvez vous déplacer" />
+      <Label layoutX="350.0" layoutY="460.0" text="(sélectionnuer plusieurs avec CTRL)" />
+      <TableView fx:id="tableauLocalitesDeplacements" layoutX="355.0" layoutY="492.0" prefHeight="200.0" prefWidth="200.0" />
+   </children>
+</AnchorPane>
