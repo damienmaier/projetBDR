@@ -34,7 +34,7 @@
       <CheckBox fx:id="checkTuteur" layoutX="36.0" layoutY="337.0" mnemonicParsing="false" text="tuteur" />
       <CheckBox fx:id="checkEleve" layoutX="36.0" layoutY="366.0" mnemonicParsing="false" text="élève" />
       <Label layoutX="353.0" layoutY="440.0" text="localités où vous pouvez vous déplacer" />
-      <Label layoutX="350.0" layoutY="460.0" text="(sélectionnuer plusieurs avec CTRL)" />
+      <Label layoutX="350.0" layoutY="460.0" text="(sélectionner plusieurs avec CTRL)" />
       <TableView fx:id="tableauLocalitesDeplacements" layoutX="355.0" layoutY="492.0" prefHeight="200.0" prefWidth="200.0" />
    </children>
 </AnchorPane>

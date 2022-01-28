@@ -13,7 +13,7 @@
       <Label layoutX="86.0" layoutY="93.0" text="Tarif" />
       <Label layoutX="101.0" layoutY="237.0" text="Domaine" />
       <Label layoutX="343.0" layoutY="181.0" text="Disponible pour les élèves" />
-      <Label layoutX="343.0" layoutY="208.0" text="ayant le niveau" />
+      <Label layoutX="343.0" layoutY="208.0" text="préparant le niveau" />
       <Label layoutX="346.0" layoutY="237.0" text="(sélectionner plusieurs avec CTRL)" />
       <TableView fx:id="tableauDomaine" layoutX="42.0" layoutY="269.0" prefHeight="200.0" prefWidth="200.0" />
       <Label fx:id="texteErreur" layoutX="394.0" layoutY="513.0" text="Entrée erronée" textFill="RED" />
