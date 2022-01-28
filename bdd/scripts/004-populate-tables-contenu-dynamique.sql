@@ -3,7 +3,7 @@ VALUES ('5 boulevard des palmiers', 2, 1227),
        ('3 boulevard des palmiers', 10, 1230),
        ('rue du savoir 34', 15, 1227),
        ('2 boulevard du poivre', 4, 1202),
-       ('1 boulevard de la solitude', 1, 1400),
+       ('1 boulevard de la solitude', 2, 1400),
        ('22 rue des palmiers', 2, 1230),
        ('6 rue du sel', 12, 1462);
 
@@ -33,8 +33,7 @@ VALUES (1230, 1),
        (1400, 5),
        (1400, 6),
        (1227, 7),
-       (1400, 1),
-       (1400, 2);
+       (1400, 1);
 
 INSERT INTO personne_langue
 VALUES (1, 'Français'),
@@ -61,16 +60,16 @@ VALUES ('Maths', 1, 'bachelor'),
         ('Italien', 4, 'B1'),
         ('Italien', 5, 'B2'),
         ('Maths', 5, 'bachelor'),
-       ('Maths', 4, 'bachelor'),;
+       ('Maths', 4, 'bachelor');
 
 INSERT INTO Tuteur
 VALUES (5, 'je suis le meilleur'),(6, 'non c'' est moi le meilleur'),(7, 'salut !');
 
 INSERT INTO "domainecompétence_tuteur"
-VALUES ('Maths', 2, 'doctorat');
+VALUES ('Maths', 5, 'doctorat');
 
 INSERT INTO prestation(nom, tarif, idtuteur, nomdomainecompétence)
-VALUES ('Cours de maths niveau uni', 50, 2, 'Maths');
+VALUES ('Cours de maths niveau uni', 50, 5, 'Maths');
 
 INSERT INTO niveaurequis
 VALUES(1, 'bachelor'),

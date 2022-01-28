@@ -180,88 +180,85 @@ EXECUTE FUNCTION function_check_lieuPrivé();
 /* ------------------------------------------------------------------ */
 --  Vérifie que la date de l'évaluation soit plus grande que la plus ancienne session que l'élève et le tuteur concernés ont faite ensemble.
 
--- CREATE OR REPLACE FUNCTION function_check_evaluation_date()
---     RETURNS TRIGGER
---     LANGUAGE plpgsql
--- AS
--- $BODY$
--- BEGIN
---     IF NEW.date < MIN(SELECT DISTINCT date
---                       FROM Session
---                       INNER JOIN Prestation ON Prestation.id = Session.idPrestation
---                       INNER JOIN Tuteur ON  Prestation.idTuteur = Tuteur.idPersonne
---                       INNER JOIN Session_Élève ON Session_Élève.id = session.id
---         )
---     THEN RAISE EXCEPTION('The Evaluation date must be greater than or equal to the date of the most
---                     old session that the student and the tutor concerned by this evaluation
---                     have done together.');
---     ELSE
---         RETURN NEW;
---     END IF;
--- END;
--- $BODY$
--- ;
---
--- CREATE OR REPLACE TRIGGER check_evalutation_Date
---     BEFORE INSERT OR UPDATE ON Evaluation
---     FOR EACH ROW
--- EXECUTE FUNCTION function_check_evaluation_date();
+CREATE OR REPLACE FUNCTION function_check_evaluation_date()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS
+$BODY$
+	BEGIN
+    	IF NEW.date < MIN(date)
+                         FROM Session
+                            INNER JOIN Prestation ON Prestation.id = Session.idPrestation
+                            INNER JOIN Tuteur ON  Prestation.idTuteur = Tuteur.idPersonne
+                            INNER JOIN Session_Élève ON Session_Élève.id = session.id
+			THEN RAISE EXCEPTION 'The Evaluation date must be greater than or equal to the date of the most
+                    old session that the student and the tutor concerned by this evaluation
+                    have done together.';
+		ELSE
+			RETURN NEW;
+		END IF;
+END;
+$BODY$
+;
+
+CREATE OR REPLACE TRIGGER check_evalutation_Date
+    BEFORE INSERT OR UPDATE ON Évaluation
+    FOR EACH ROW
+EXECUTE FUNCTION function_check_evaluation_date();
 
 /* ------------------------------------------------------------------ */
 /* Vérifie que pour chaque EvaluationTuteur il doit exister au moins une Session à laquelle ont participé
    l’Élève et le Tuteur concernés par cette évaluation
 */
 
--- CREATE OR REPLACE FUNCTION function_check_evaluation_tuteur()
---     RETURNS TRIGGER
---     LANGUAGE plpgsql
--- AS
--- $BODY$
--- BEGIN
---     IF NEW.idÉlève NOT IN (SELECT idÉlève
---                            FROM Session
---                                     INNER JOIN prestation ON prestation.id = Session.idPrestation
---                                AND prestation.idtuteur = NEW.idTuteur
---                                     INNER JOIN "session_Élève" ON session_Élève.idsession = Prestation.id
---
---     )
---         THEN RAISE EXCEPTION 'The tutor must have at least given one course to the student.';
---     ELSE
---         RETURN NEW;
---     END IF;
---     END;
--- $BODY$
--- ;
---
--- CREATE OR REPLACE TRIGGER check_evalutation_tuteur
---     BEFORE INSERT OR UPDATE ON Evaluation
---     FOR EACH ROW
--- EXECUTE FUNCTION function_check_evaluation_tuteur();
+CREATE OR REPLACE FUNCTION function_check_evaluation_tuteur()
+    RETURNS TRIGGER
+    LANGUAGE plpgsql
+AS
+$BODY$
+BEGIN
+    IF NEW.idÉlève NOT IN (SELECT idÉlève
+                           FROM Session
+                                    INNER JOIN prestation ON prestation.id = Session.idPrestation
+                               AND prestation.idtuteur = NEW.idTuteur
+                                    INNER JOIN "session_Élève" ON session_Élève.idsession = Prestation.id)
+    THEN RAISE EXCEPTION 'The tutor must have atleast given one course to the student.';
+    ELSE
+        RETURN NEW;
+    END IF;
+END;
+$BODY$
+;
+
+CREATE OR REPLACE TRIGGER check_evalutation_tuteur
+    BEFORE INSERT OR UPDATE ON "Évaluation"
+    FOR EACH ROW
+EXECUTE FUNCTION function_check_evaluation_tuteur();
 
 /* ------------------------------------------------------------------ */
 /* Il ne peut pas y avoir deux EvaluationTuteur qui concernent le même Élève et le même Tuteur.
 */
--- CREATE OR REPLACE FUNCTION function_check_same_evaluation_tuteur()
---     RETURNS TRIGGER
---     LANGUAGE plpgsql
--- AS
--- $BODY$
--- BEGIN
---     IF NEW.idtuteur IN (SELECT idtuteur
---                         FROM "Évaluationtuteur"
---                         WHERE "idÉlève" = NEW.idÉlève);
---     THEN RAISE EXCEPTION('The tutor has already evaluated this student.')
---     ELSE
---     RETURN NEW;
--- END IF;
---     END;
--- $BODY$
--- ;
---
--- CREATE OR REPLACE TRIGGER check_same_evalutation_tuteur
---     BEFORE INSERT OR UPDATE ON Evaluation
---     FOR EACH ROW
--- EXECUTE FUNCTION function_check_same_evaluation_tuteur();
+CREATE OR REPLACE FUNCTION function_check_same_evaluation_tuteur()
+    RETURNS TRIGGER
+    LANGUAGE plpgsql
+AS
+$BODY$
+BEGIN
+    IF NEW.idtuteur IN (SELECT idtuteur
+                        FROM "Évaluationtuteur"
+                        WHERE "idÉlève" = NEW.idÉlèv)
+    THEN RAISE EXCEPTION 'The tutor has already evaluated this student.';
+    ELSE
+        RETURN NEW;
+    END IF;
+END;
+$BODY$
+;
+
+CREATE OR REPLACE TRIGGER check_same_evalutation_tuteur
+    BEFORE INSERT OR UPDATE ON Évaluationtuteur
+    FOR EACH ROW
+EXECUTE FUNCTION function_check_same_evaluation_tuteur();
 
 
 
